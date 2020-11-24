@@ -1,85 +1,75 @@
----
 openapi: 3.0.0
 info:
+  version: 1.0.0
   title: smartAPI
   description: This is smartAPI
-  version: 1.0.0
 servers:
-- url: https://us-central1-smartapi-295619.cloudfunctions.net/DigiCertApttusWS_CF/getcontract
+  - url: 'https://us-central1-smartapi-295619.cloudfunctions.net/DigiCertApttusWS_CF/contract'
 paths:
-  /id/{userId}/name/{name}:
+  '/id/{accountID}/product_id/{productId}':
     get:
-      summary: User by ID
+      summary: Returns a user by ID
       parameters:
-      - name: userId
-        in: path
-        description: The ID of the user.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: name
-        in: path
-        description: The Name of the contract - Basic_OV, Basic_OV_FQDN_SAN, Basic_OV_Wildcard_SAN, Basic_EV, Basic_EV_FQDN_SAN
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: accountID
+          in: path
+          required: true
+          description: The Account ID
+          schema:
+            type: string
+        - name: productId
+          in: path
+          required: true
+          description: The productId search string
+          schema:
+            type: string
       responses:
-        "200":
+        '200':
           description: Successful response
           content:
             application/json:
               schema:
-                required:
-                - contract
-                - time_to_run
+                description: ''
                 type: object
                 properties:
                   contract:
-                    required:
-                    - adjustment
-                    - entitlements
-                    - overall_discount_percent
-                    - total_size
-                    - type
                     type: object
                     properties:
                       type:
                         type: string
+                        minLength: 1
                       adjustment:
                         type: string
                       overall_discount_percent:
                         type: number
+                      owner_email:
+                        type: string
+                        minLength: 1
                       total_size:
                         type: number
                       entitlements:
-                        minItems: 1
-                        uniqueItems: true
                         type: array
+                        uniqueItems: true
+                        minItems: 1
                         items:
                           required:
-                          - currency
-                          - discount_percent
-                          - discount_price
-                          - list_price
-                          - product_id
-                          - product_name
-                          - term
+                            - product_id
+                            - product_name
+                            - term
+                            - currency
+                            - list_price
+                            - discount_price
+                            - discount_percent
                           properties:
                             product_id:
-                              minLength: 1
                               type: string
+                              minLength: 1
                             product_name:
-                              minLength: 1
                               type: string
+                              minLength: 1
                             term:
-                              minLength: 1
                               type: string
-                            currency:
                               minLength: 1
+                            currency:
                               type: string
                             list_price:
                               type: number
@@ -87,9 +77,23 @@ paths:
                               type: number
                             discount_percent:
                               type: number
+                    required:
+                      - type
+                      - adjustment
+                      - overall_discount_percent
+                      - owner_email
+                      - total_size
+                      - entitlements
                   time_to_run:
-                    minLength: 1
                     type: string
+                    minLength: 1
+                  product_id_search:
+                    type: string
+                    minLength: 1
+                required:
+                  - contract
+                  - time_to_run
+                  - product_id_search
               examples:
                 example-1:
                   value:
@@ -97,17 +101,42 @@ paths:
                       type: string
                       adjustment: string
                       overall_discount_percent: 0
+                      owner_email: string
                       total_size: 0
                       entitlements:
-                      - product_id: string
-                        product_name: string
-                        term: string
-                        currency: string
-                        list_price: 0
-                        discount_price: 0
-                        discount_percent: 0
+                        - product_id: string
+                          product_name: string
+                          term: string
+                          currency: string
+                          list_price: 0
+                          discount_price: 0
+                          discount_percent: 0
                     time_to_run: string
-        "400":
+                    product_id_search: string
+        '400':
           description: The specified user ID is invalid (e.g. not a number)
-        "404":
+        '404':
           description: A user with the specified ID was not found
+      operationId: ''
+      description: Desc
+    parameters: []
+  /names:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: object
+                  required:
+                    - 'true'
+                  properties: {}
+      operationId: get-names
