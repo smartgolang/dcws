@@ -1,0 +1,113 @@
+---
+openapi: 3.0.0
+info:
+  title: smartAPI
+  description: This is smartAPI
+  version: 1.0.0
+servers:
+- url: https://us-central1-smartapi-295619.cloudfunctions.net/DigiCertApttusWS_CF/getcontract
+paths:
+  /id/{userId}/name/{name}:
+    get:
+      summary: User by ID
+      parameters:
+      - name: userId
+        in: path
+        description: The ID of the user.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: name
+        in: path
+        description: The Name of the contract - Basic_OV, Basic_OV_FQDN_SAN, Basic_OV_Wildcard_SAN, Basic_EV, Basic_EV_FQDN_SAN
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                required:
+                - contract
+                - time_to_run
+                type: object
+                properties:
+                  contract:
+                    required:
+                    - adjustment
+                    - entitlements
+                    - overall_discount_percent
+                    - total_size
+                    - type
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      adjustment:
+                        type: string
+                      overall_discount_percent:
+                        type: number
+                      total_size:
+                        type: number
+                      entitlements:
+                        minItems: 1
+                        uniqueItems: true
+                        type: array
+                        items:
+                          required:
+                          - currency
+                          - discount_percent
+                          - discount_price
+                          - list_price
+                          - product_id
+                          - product_name
+                          - term
+                          properties:
+                            product_id:
+                              minLength: 1
+                              type: string
+                            product_name:
+                              minLength: 1
+                              type: string
+                            term:
+                              minLength: 1
+                              type: string
+                            currency:
+                              minLength: 1
+                              type: string
+                            list_price:
+                              type: number
+                            discount_price:
+                              type: number
+                            discount_percent:
+                              type: number
+                  time_to_run:
+                    minLength: 1
+                    type: string
+              examples:
+                example-1:
+                  value:
+                    contract:
+                      type: string
+                      adjustment: string
+                      overall_discount_percent: 0
+                      total_size: 0
+                      entitlements:
+                      - product_id: string
+                        product_name: string
+                        term: string
+                        currency: string
+                        list_price: 0
+                        discount_price: 0
+                        discount_percent: 0
+                    time_to_run: string
+        "400":
+          description: The specified user ID is invalid (e.g. not a number)
+        "404":
+          description: A user with the specified ID was not found
