@@ -8,7 +8,7 @@ servers:
 paths:
   '/id/{accountID}/product_id/{productId}':
     get:
-      summary: Returns a user by ID
+      summary: Returns contract by ID
       parameters:
         - name: accountID
           in: path
