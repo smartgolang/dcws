@@ -4,9 +4,9 @@ info:
   title: dcwc
   description: dcws
 servers:
-  - url: 'https://us-central1-smartapi-295619.cloudfunctions.net/DigiCertApttusWS_CF/contract'
+  - url: 'https://dcapttws-q36jfaooja-uc.a.run.app/v1'
 paths:
-  '/id/{accountID}/product_id/{productId}':
+  '/contract/id/{accountID}/product_id/{productId}':
     get:
       summary: Returns contract by ID
       parameters:
@@ -52,6 +52,7 @@ paths:
                         minItems: 1
                         items:
                           required:
+                            - id
                             - product_id
                             - product_name
                             - term
@@ -60,6 +61,8 @@ paths:
                             - discount_price
                             - discount_percent
                           properties:
+                            id:
+                              type: number
                             product_id:
                               type: string
                               minLength: 1
@@ -90,13 +93,17 @@ paths:
                   product_id_search:
                     type: string
                     minLength: 1
+                  version:
+                    type: string
                 required:
                   - contract
                   - time_to_run
                   - product_id_search
+                  - version
               examples:
                 example-1:
                   value:
+                    version: string
                     contract:
                       type: string
                       adjustment: string
@@ -104,7 +111,8 @@ paths:
                       owner_email: string
                       total_size: 0
                       entitlements:
-                        - product_id: string
+                        - id: 0
+                          product_id: string
                           product_name: string
                           term: string
                           currency: string
@@ -120,7 +128,7 @@ paths:
       operationId: ''
       description: Desc
     parameters: []
-  /id_search_names:
+  /contract/id_search_names:
     get:
       summary: Get Id search strings
       tags: []
